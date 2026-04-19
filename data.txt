@@ -1,0 +1,30 @@
+We're using train_test_split with test_size=0.2, stratify=y_all, and random_state=SEED (42). That is an 80% train / 20% validation split, stratified so class proportions stay similar in both sets.
+
+For 285 labeled images (after the header row):
+Train: (0.8 \times 285 = 228) images (≈80%)
+Validation: (0.2 \times 285 = 57) images (≈20%)
+
+Label		Count
+walking_running	98
+sitting		95
+standing	92
+---------------
+Dataset Preprocessing: 
+1- Data preparation:
+	- Load the CSV; optionally drop a stray unnamed index column.
+	- Download images from coco_url into a1_images/ (filename from URL / file_name).
+	- Map string label → integer with LABEL2ID (sorted unique labels).
+	- Build train/val indices with stratified 80/20 split.
+
+2- Image loading (ImagePathDataset):
+	- Open file with PIL, .convert("RGB") so channels are consistent.
+
+3- Base pipeline (base_tf) — used for FNN/CNN baseline and validation
+	- Resize((224, 224)) — fixed size for the network.
+	- ToTensor() — PIL → float tensor ([C,H,W]) in ([0,1]).
+	- Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) — ImageNet mean/std (standard for models pretrained on ImageNet-style data).
+
+----------------
+
+Bonus — quick error analysis
+Inspect confusion pairs (e.g. sitting vs standing) without extra libraries.
